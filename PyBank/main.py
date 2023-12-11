@@ -37,19 +37,18 @@ with open(BUDGET_CSV_DATA_PATH) as csvfile:
 
 
         #### The greatest increase in profits (date and amount) over the entire period
-        if int(row[1]) > greatest_increase_profit:
+        if current_profit > greatest_increase_profit:
             greatest_increase_month = (row[0])
-            greatest_increase_profit = int(row[1])
+            greatest_increase_profit = current_profit
 
         #### the greatest decrease in profits (date and amount) over the entire period  
-        elif int(row[1]) < greatest_decrease_profit:
+        elif current_profit < greatest_decrease_profit:
             greatest_decrease_month = (row[0])
-            greatest_decrease_profit = int(row[1])
+            greatest_decrease_profit = current_profit
 
     
     average_change = round(total_change / (months-1), 2)
-    greatest_increase_in_profits = f'Greatest Increase in Profits: {greatest_increase_month}  (${greatest_increase_profit})'
-    print(greatest_increase_in_profits)
+    
 output = (
     "Financial Analysis\n"
     "----------------------------\n"
