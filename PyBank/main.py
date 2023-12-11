@@ -1,36 +1,65 @@
 import os
 import csv
 
-budget_data_csv = os.path.join("Resources", "budget_data.csv")
+BUDGET_CSV_DATA_PATH = os.path.join("Resources", "budget_data.csv")
+ANALYSIS_PATH = os.path.join("analysis", "results.txt")
 
-with open(budget_data_csv) as csvfile:
-    csvreader = csv.reader(csvfile, delimiter=",")
-
-#### Print top of file
-print("Financial Analysis")
-print("----------------------------")
-
-
-##### The Total # of Months included in the dataset
-#counter
-months = 0
-# loop
-for  in :
-
-
-
-    months += months
-
-# display total
-print(months)
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+with open(BUDGET_CSV_DATA_PATH) as csvfile:
+    csvreader = csv.reader(csvfile)
+    header = next(csvreader)
     
+    ##### The Total # of Months included in the dataset
+    months = 0
+    total_profit = 0
+    total_change = 0
+    greatest_increase_month = ''
+    greatest_decrease_month = ''
+    greatest_increase_profit = 0
+    greatest_decrease_profit = 0
+   
+    previous_profit = None
+    for row in csvreader:
+
+        months += 1
+        
+        current_month = row[0]
+        current_profit = int(row[1])
+        
+        #### The net total amount of "Profit/Losses" over the entire period
+        total_profit += current_profit    
+      
+        #### The changes in "Profit/Losses" over the entire period, and then the average of those changes
+        if previous_profit is not None:
+            current_change = current_profit - previous_profit
+            total_change += current_change 
+        previous_profit = current_profit
+
+
+        #### The greatest increase in profits (date and amount) over the entire period
+        if int(row[1]) > greatest_increase_profit:
+            greatest_increase_month = (row[0])
+            greatest_increase_profit = int(row[1])
+
+        #### the greatest decrease in profits (date and amount) over the entire period  
+        elif int(row[1]) < greatest_decrease_profit:
+            greatest_decrease_month = (row[0])
+            greatest_decrease_profit = int(row[1])
+
     
-#### The net total amount of "Profit/Losses" over the entire period
-
-#### The changes in "Profit/Losses" over the entire period, and then the average of those changes
-
-#### he greatest increase in profits (date and amount) over the entire period
-
-#### The greatest decrease in profits (date and amount) over the entire period
-
+    average_change = round(total_change / (months-1), 2)
+    greatest_increase_in_profits = f'Greatest Increase in Profits: {greatest_increase_month}  (${greatest_increase_profit})'
+    print(greatest_increase_in_profits)
+output = (
+    "Financial Analysis\n"
+    "----------------------------\n"
+    f"Total Months: {months}\n"
+    f"Average Change: $ {average_change}\n"
+    f"Greatest Increase in Profits: {greatest_increase_month}  (${greatest_increase_profit})\n"
+    f"Greatest Decrease in Profits: {greatest_decrease_month} (${greatest_decrease_profit})"
+)
+#### Export result to text file
+with open(ANALYSIS_PATH, "w") as output_file:
+    output_file.write(output)
+    print(output)
 #### Export result to text file
